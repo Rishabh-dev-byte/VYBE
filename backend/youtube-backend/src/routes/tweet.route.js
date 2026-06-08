@@ -10,10 +10,10 @@ import {verifyJWT} from "../middlewares/auth.middleware.js"
 
 const router = Router();
 router.route("/createTweet").post(verifyJWT,createTweet)
-router.route("/getOwnerTweets").post(verifyJWT,getOwnerTweets)
+router.route("/getOwnerTweets").get(verifyJWT,getOwnerTweets)
 router.route("/getAllTweets").get(verifyJWT,getAllTweets)
-router.route("/updateTweet/:id").get(verifyJWT,updateTweet)
-router.route("/deleteTweet/:id").get(verifyJWT,deleteTweet)
+router.route("/updateTweet/:id").patch(verifyJWT, updateTweet)
+router.route("/deleteTweet/:id").delete(verifyJWT,deleteTweet)
 
 
 export default router

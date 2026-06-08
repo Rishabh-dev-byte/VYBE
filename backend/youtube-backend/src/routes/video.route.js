@@ -35,9 +35,9 @@ router.route("/publishAVideo").post(verifyJWT,
 router.route("/getVideoById/:Id").get(getVideoById)
 router.route("/getVideoByOwner").get(verifyJWT,getVideoByOwner)
 router.route("/updateVideo/:videoId").patch(upload.single("thumbnail"),updateVideo)
-router.route("/deleteVideo/:videoId").get(deleteVideo)
-router.route("/togglePublishStatus/:videoId").get(togglePublishStatus)
-router.route("/addToWatchHistory/:Id").get(verifyJWT,addToWatchHistory)
-router.route("/RemoveFromWatchHistory/:Id").get(verifyJWT,RemoveFromWatchHistory)
+router.route("/deleteVideo/:videoId").delete(deleteVideo)
+router.route("/togglePublishStatus/:videoId").post(togglePublishStatus)
+router.route("/addToWatchHistory/:Id").post(verifyJWT,addToWatchHistory)
+router.route("/RemoveFromWatchHistory/:Id").post(verifyJWT,RemoveFromWatchHistory)
 
 export default router

@@ -12,7 +12,7 @@ const router = Router();
 router.route("/getVideoComments/:videoId").get(verifyJWT,getVideoComments)
 router.route("/addComment/:videoId").post(verifyJWT,addComment)
 router.route("/updateComment/:commentId").post(verifyJWT,updateComment)
-router.route("/deleteComment/:commentId").get(verifyJWT,deleteComment)
+router.route("/deleteComment/:commentId").delete(verifyJWT,deleteComment)
 
 
 

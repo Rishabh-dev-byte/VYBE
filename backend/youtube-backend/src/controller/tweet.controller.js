@@ -27,15 +27,20 @@ const createTweet = asyncHandler(async (req, res) => {
 const getOwnerTweets = asyncHandler(async (req, res) => {
       
 
-    const userTweets = await Tweet.find({owner:req.user._id}).sort({ createdAt: -1 });
+    const userTweets = await Tweet.find({ owner: req.user._id }).sort({ createdAt: -1 })
 
-    if(!userTweets){
-        throw new ApiError(404,"tweets by current user not fetched")
-    }
+    if(!userTweets.length){
+    throw new ApiError(404, "no tweets found")
+}
+
+return res.status(200).json(
+    new ApiResponse(200, userTweets, "tweets fetched successfully")
+)
 
 })
 
 const getAllTweets = asyncHandler(async (req,res)=>{
+    const { page = 1, limit = 10 } = req.query
     const tweets = await Tweet.aggregate([
         {
             $match:{
@@ -72,6 +77,11 @@ const getAllTweets = asyncHandler(async (req,res)=>{
             }
         }
     ])
+
+    const tweets = await Tweet.aggregatePaginate(aggregate, {
+    page: Number(page),
+    limit: Number(limit)
+})
     return res.status(200).json(
     new ApiResponse(200,tweets,"all videos fetched successfully")
     )
@@ -89,20 +99,15 @@ const updateTweet = asyncHandler(async (req, res) => {
           throw new ApiError(400, "Invalid ID format");
         }
     
-    const updatedTweet = await Tweet.findByIdAndUpdate(
-        id,
-        {
-           $set:{
-            content
-           } 
-        },
-        {new:true}
-    )
+    const updatedTweet = await Tweet.findOneAndUpdate(
+    { _id: id, owner: req.user._id },
+    { $set: { content } },
+    { new: true }
+)
 
-    if(!updatedTweet){
-        throw new ApiError(404, "Tweet not found");
-    }
-    
+if(!updatedTweet){
+    throw new ApiError(403, "Tweet not found or unauthorized")
+}
     return res.status(200).json(
     new ApiResponse(200, updatedTweet , "tweet updated successfully")
     )
@@ -115,11 +120,14 @@ const deleteTweet = asyncHandler(async (req, res) => {
           throw new ApiError(400, "Invalid ID format");
         }
 
-     const deletedTweet = await Tweet.findByIdAndDelete(id)
-     
-      if(!deletedTweet){
-        throw new ApiError(404, "Tweet not deleted");
-    }
+     const deletedTweet = await Tweet.findOneAndDelete({
+    _id: id,
+    owner: req.user._id 
+})
+
+if(!deletedTweet){
+    throw new ApiError(403, "Tweet not found or unauthorized")
+}
     
      return res.status(200).json(
     new ApiResponse(200, {} , "tweet deleted successfully")
