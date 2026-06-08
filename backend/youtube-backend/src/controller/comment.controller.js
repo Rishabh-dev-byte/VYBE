@@ -13,7 +13,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
          }
     const {page = 1, limit = 10} = req.query
 
-     const videoComment =  Comment.aggregate([
+     const videoComment = await Comment.aggregate([
             {
                 $match:{
                      video:new mongoose.Types.ObjectId(videoId)
@@ -44,7 +44,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
       }
     },
     {
-      $sort: { createdAt: -1 }
+      $sort: { createdAt: -1 } // -1 = descending (newest comment comes first)
     },
   ])
    
@@ -71,11 +71,11 @@ const addComment = asyncHandler(async (req, res) => {
         throw new ApiError(400, "content is missing");
     }
     
-    const comment = await Comment.create({
-          content,
-          videoId,
-          owner:req.user._id
-    })
+  const comment = await Comment.create({
+    content,
+    video: videoId,
+    owner: req.user._id
+})
 
     if(!comment){
         throw new ApiError(500,"comment not created")
@@ -86,10 +86,10 @@ const addComment = asyncHandler(async (req, res) => {
 })
 
 const updateComment = asyncHandler(async (req, res) => {
-    const {videoId} = req.params
+    const {commentId} = req.params
     const {content} = req.body
     
-    if (!mongoose.Types.ObjectId.isValid(videoId)) 
+    if (!mongoose.Types.ObjectId.isValid(commentId)) 
         {
             throw new ApiError(400, "Invalid ID format");
         }
@@ -98,14 +98,14 @@ const updateComment = asyncHandler(async (req, res) => {
         throw new ApiError(400, "content is missing");
     }
 
-    const updatedComment = await Comment.findOneAndUpdate(
-     {video:videoId,owner:req.user._id},
-     { $set: { content: "content" } },
-     {new:true}
-    )
+   const updatedComment = await Comment.findOneAndUpdate(
+    { _id: commentId, owner: req.user._id },  // 👈 find by commentId
+    { $set: { content } },
+    { new: true }
+)
 
     if(!updatedComment){
-        throw new ApiError(500,"comment not updated")
+        throw new ApiError(404,"comment not updated")
     }
 
     return res.status(200).json(new ApiResponse(200,updatedComment,"comment updated successfully"))
@@ -115,22 +115,22 @@ const updateComment = asyncHandler(async (req, res) => {
 
 const deleteComment = asyncHandler(async (req, res) => {
        
-    const {videoId} = req.params
+    const {commentId} = req.params
     
     
-    if (!mongoose.Types.ObjectId.isValid(videoId)) 
+    if (!mongoose.Types.ObjectId.isValid(commentId)) 
         {
             throw new ApiError(400, "Invalid ID format");
         }
 
    
-    const deletedComment = await Comment.findOneAndDelete({video:videoId,owner:req.user._id})
+    const deletedComment = await Comment.findOneAndDelete({_id:commentId,owner:req.user._id})
 
     if(!deletedComment){
         throw new ApiError(500,"comment not deleted")
     }
 
-    return res.status(200).json(new ApiResponse(200,deletedComment,"comment updated successfully"))
+    return res.status(200).json(new ApiResponse(200,deletedComment,"comment deleted successfully"))
 
 
 })
