@@ -12,12 +12,12 @@ const createTweet = asyncHandler(async (req, res) => {
         throw new ApiError(400,"context is missing")
     }
 
-    const tweet = await Tweet.create({
+    const tweets = await Tweet.create({
         content,
         owner:req.user._id
     })
     
-    if(!tweet){
+    if(!tweets){
         throw new ApiError(500,"tweet not created")
     }
 
@@ -78,7 +78,7 @@ const getAllTweets = asyncHandler(async (req,res)=>{
         }
     ])
 
-    const tweets = await Tweet.aggregatePaginate(aggregate, {
+    const tweet = await Tweet.aggregatePaginate(aggregate, {
     page: Number(page),
     limit: Number(limit)
 })
