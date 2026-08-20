@@ -8,11 +8,11 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL;
 axios.defaults.baseURL = backendUrl;
 
 import React from "react";
-import { createContext } from "react-router-dom";
+
 
 export const AuthContext = createContext();
 
-const AuthContextProvider = ({ children }) => {
+ export const AuthContextProvider = ({ children }) => {
   const [authUser, setAuthUser] = useState(null);
   const checkAuth = async () => {
     try {
