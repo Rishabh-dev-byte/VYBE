@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { AuthContextProvider } from "./context/AuthContext";
 import Login from "./components/ui/Login";
 import Signup from "./components/ui/Signup";
+import Profile from "./components/ui/Profile";
 
 
 const router=createBrowserRouter([
@@ -22,6 +23,11 @@ const router=createBrowserRouter([
   {
     path:"/signup",
     element:<Signup/>,
+   
+  },
+   {
+    path:"/profile",
+    element:<Profile/>,
    
   }
 ])
