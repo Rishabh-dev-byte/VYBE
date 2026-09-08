@@ -21,7 +21,7 @@ const createTweet = asyncHandler(async (req, res) => {
         throw new ApiError(500,"tweet not created")
     }
 
-    return res.status(200).json(new ApiResponse(200,tweet,"tweet created successfully"))
+    return res.status(200).json(new ApiResponse(200,tweets,"tweet created successfully"))
 })
 
 const getOwnerTweets = asyncHandler(async (req, res) => {
@@ -39,54 +39,57 @@ return res.status(200).json(
 
 })
 
-const getAllTweets = asyncHandler(async (req,res)=>{
-    const { page = 1, limit = 10 } = req.query
-    const tweets = await Tweet.aggregate([
+const getAllTweets = asyncHandler(async (req, res) => {
+    const { page = 1, limit = 10 } = req.query;
+
+    const aggregate = Tweet.aggregate([
         {
-            $match:{
-                isVisible:true
+            $match: {
+                isVisible: true
             }
         },
 
         {
-            $lookup:{
-                from:"users",
-                localField:"owner",
-                foreignField:"_id",
-                as:"owner",
-                pipeline:[
+            $lookup: {
+                from: "users",
+                localField: "owner",
+                foreignField: "_id",
+                as: "owner",
+                pipeline: [
                     {
-                        $project:{
-                            fullName:1,
-                            username:1,
-                            avatar:1,
-                            _id:1
+                        $project: {
+                            fullName: 1,
+                            username: 1,
+                            avatar: 1,
+                            _id: 1
                         }
                     }
                 ]
             }
         },
 
-        
         {
-             $addFields:{
-                owner:{
-                    $first:"$owner"
-
+            $addFields: {
+                owner: {
+                    $first: "$owner"
                 }
             }
         }
-    ])
+    ]);
 
-    const tweet = await Tweet.aggregatePaginate(aggregate, {
-    page: Number(page),
-    limit: Number(limit)
-})
+    const tweets = await Tweet.aggregatePaginate(aggregate, {
+        page: Number(page),
+        limit: Number(limit)
+    });
+
     return res.status(200).json(
-    new ApiResponse(200,tweets,"all videos fetched successfully")
-    )
-})
-
+        new ApiResponse(
+            200,
+            tweets,
+            "All tweets fetched successfully"
+        )
+    );
+});
 const updateTweet = asyncHandler(async (req, res) => {
       const {content} = req.body 
       const { id } = req.params

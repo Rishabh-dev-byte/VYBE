@@ -18,13 +18,12 @@ const Profile = () => {
         },
     });
 
-    // Avatar form
+    
     const avatarForm = useForm();
 
-    // Cover image form
+    
     const coverForm = useForm();
 
-    // Set existing user details
     useEffect(() => {
         if (authUser) {
             detailsForm.reset({

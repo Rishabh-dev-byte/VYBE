@@ -7,6 +7,7 @@ import { AuthContextProvider } from "./context/AuthContext";
 import Login from "./components/ui/Login";
 import Signup from "./components/ui/Signup";
 import Profile from "./components/ui/Profile";
+import Tweets from "./pages/Tweets";
 
 
 const router=createBrowserRouter([
@@ -28,6 +29,11 @@ const router=createBrowserRouter([
    {
     path:"/profile",
     element:<Profile/>,
+   
+  },
+   {
+    path:"/tweets",
+    element:<Tweets/>,
    
   }
 ])
