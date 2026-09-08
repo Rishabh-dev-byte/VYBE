@@ -8,6 +8,7 @@ import Login from "./components/ui/Login";
 import Signup from "./components/ui/Signup";
 import Profile from "./components/ui/Profile";
 import Tweets from "./pages/Tweets";
+import MyTweet from "./pages/MyTweet";
 
 
 const router=createBrowserRouter([
@@ -34,6 +35,11 @@ const router=createBrowserRouter([
    {
     path:"/tweets",
     element:<Tweets/>,
+   
+  },
+   {
+    path:"/Mytweets",
+    element:<MyTweet/>,
    
   }
 ])

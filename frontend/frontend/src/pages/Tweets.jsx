@@ -4,6 +4,8 @@ import { useAuthContext } from "@/context/AuthContext";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import api from "@/lib/axios";
+import { Link } from "react-router-dom";
+
 
 const Tweets = () => {
     const [tweets, setTweets] = useState([]);
@@ -85,9 +87,17 @@ const Tweets = () => {
             <div className="mx-auto max-w-2xl">
 
                 {/* Header */}
-                <h1 className="mb-6 text-3xl font-bold">
+                <h1 className="mb-6 text-3xl font-bold gap-10">
                     Tweets
+                   
                 </h1>
+                
+                <Link
+                  to="/Mytweets"
+                  className="text-sm text-zinc-300 transition hover:text-white"
+                >
+                  My Tweets
+                 </Link>
 
                 {/* Create Tweet */}
                 <form
