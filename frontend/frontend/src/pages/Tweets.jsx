@@ -13,7 +13,7 @@ const Tweets = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [likedTweet, setLikedTweet] = useState(null);
-  const [dislikedTweet, setDislikedTweet] = useState(null);
+  
 
   const { authUser } = useAuthContext();
 
@@ -26,7 +26,7 @@ const Tweets = () => {
         setLikedTweet(null);
       } else {
         setLikedTweet(tweet._id);
-        setDislikedTweet(null);
+    
       }
     } catch (error) {
       console.log("error is", error.response?.data.message || error.message);
@@ -156,18 +156,6 @@ const Tweets = () => {
                       className={`flex items-center gap-2 rounded-lg px-3 py-2 text-gray-400 hover:bg-white/10 hover:text-white ${likedTweet == tweet._id ? "fill-current text-red-500" : ""}`}
                     >
                       <ThumbsUp size={18} />
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        tweetLike(tweet);
-                        setDislikedTweet(
-                          dislikedTweet === tweet._id ? null : tweet._id,
-                        );
-                      }}
-                      className={`flex items-center gap-2 rounded-lg px-3 py-2 text-gray-400 hover:bg-white/10 hover:text-white  ${dislikedTweet == tweet._id ? "fill-current text-red-500" : ""}`}
-                    >
-                      <ThumbsDown size={18} />
                     </button>
                   </div>
                 </div>
