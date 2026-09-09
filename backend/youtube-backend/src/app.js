@@ -24,13 +24,13 @@ import tweetRoute from "./routes/tweet.route.js"
 import likeRoute from "./routes/like.route.js"
 import commentRoute from "./routes/comment.route.js"
 
-app.use("api/v1/users",userRouter)
-app.use("api/v1/videos",videoRouter)
-app.use("api/v1/subscription",subscriptionRoute)
-app.use("api/v1/playlist",playlistRoute)
-app.use("api/v1/tweet",tweetRoute)
-app.use("api/v1/like",likeRoute)
-app.use("api/v1/comment",commentRoute)
+app.use("/api/v1/users",userRouter)
+app.use("/api/v1/videos",videoRouter)
+app.use("/api/v1/subscription",subscriptionRoute)
+app.use("/api/v1/playlist",playlistRoute)
+app.use("/api/v1/tweet",tweetRoute)
+app.use("/api/v1/like",likeRoute)
+app.use("/api/v1/comment",commentRoute)
 
 
 export default app
