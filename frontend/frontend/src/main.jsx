@@ -9,44 +9,59 @@ import Signup from "./components/ui/Signup";
 import Profile from "./components/ui/Profile";
 import Tweets from "./pages/Tweets";
 import MyTweet from "./pages/MyTweet";
+import AuthLayout from "./components/ui/AuthLayout";
 
-
-const router=createBrowserRouter([
+const router = createBrowserRouter([
   {
-    path:"/",
-    element:<App/>,
-   
-  },
-   {
-    path:"/login",
-    element:<Login/>,
-   
+    path: "/",
+    element: <App />,
   },
   {
-    path:"/signup",
-    element:<Signup/>,
-   
+    path: "/login",
+    element: (
+      <AuthLayout authentication={false}>
+        <Login />
+      </AuthLayout>
+    ),
   },
-   {
-    path:"/profile",
-    element:<Profile/>,
-   
+  {
+    path: "/signup",
+    element: (
+      <AuthLayout authentication={false}>
+        <Signup />
+      </AuthLayout>
+    ),
   },
-   {
-    path:"/tweets",
-    element:<Tweets/>,
-   
+  {
+    path: "/profile",
+    element: (
+      <AuthLayout>
+        <Profile />
+      </AuthLayout>
+    ),
   },
-   {
-    path:"/Mytweets",
-    element:<MyTweet/>,
-   
-  }
-])
+  {
+    path: "/tweets",
+    element: (
+      <AuthLayout>
+        <Tweets />
+      </AuthLayout>
+    ),
+  },
+  {
+    path: "/Mytweets",
+    element: (
+      <AuthLayout>
+        <MyTweet />
+      </AuthLayout>
+    ),
+  },
+]);
 
 createRoot(document.getElementById("root")).render(
-    <StrictMode>
-      <AuthContextProvider><RouterProvider router={router}/></AuthContextProvider>
-        
-    </StrictMode>
+  <StrictMode>
+    <AuthContextProvider>
+      <RouterProvider router={router} />
+    </AuthContextProvider>
+  </StrictMode>,
 );
