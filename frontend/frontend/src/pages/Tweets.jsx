@@ -5,176 +5,179 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import api from "@/lib/axios";
 import { Link } from "react-router-dom";
-
+import { ThumbsUp, ThumbsDown } from "lucide-react";
 
 const Tweets = () => {
-    const [tweets, setTweets] = useState([]);
-    const [tweetContent, setTweetContent] = useState("");
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
+  const [tweets, setTweets] = useState([]);
+  const [tweetContent, setTweetContent] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [likedTweet, setLikedTweet] = useState(null);
+  const [dislikedTweet, setDislikedTweet] = useState(null);
 
-    const { authUser } = useAuthContext();
+  const { authUser } = useAuthContext();
 
-    // Get all tweets
-    const getAllTweets = async () => {
-        try {
-            setLoading(true);
-            setError("");
+  const tweetLike = async (tweet) => {
+    try {
+      const response = await api.post(`/like/toggleTweetLike/${tweet._id}`);
+      console.log(response.data);
 
-            const response = await api.get("/tweet/getAllTweets", {
-                params: {
-                    page: 1,
-                    limit: 10,
-                },
-            });
+      if (likedTweet == tweet._id) {
+        setLikedTweet(null);
+      } else {
+        setLikedTweet(tweet._id);
+        setDislikedTweet(null);
+      }
+    } catch (error) {
+      console.log("error is", error.response?.data.message || error.message);
+    }
+  };
 
-            console.log(response.data);
+  // Get all tweets
+  const getAllTweets = async () => {
+    try {
+      setLoading(true);
+      setError("");
 
-            setTweets(response.data.data.docs);
-        } catch (error) {
-            setError(
-                error.response?.data?.message ||
-                "Failed to fetch tweets"
-            );
-        } finally {
-            setLoading(false);
-        }
-    };
+      const response = await api.get("/tweet/getAllTweets", {
+        params: {
+          page: 1,
+          limit: 10,
+        },
+      });
 
-    // Create tweet
-    const submitTweet = async (e) => {
-        e.preventDefault();
+      console.log(response.data);
 
-        if (!tweetContent.trim()) {
-            return;
-        }
+      setTweets(response.data.data.docs);
+    } catch (error) {
+      setError(error.response?.data?.message || "Failed to fetch tweets");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        try {
-            setError("");
+  // Create tweet
+  const submitTweet = async (e) => {
+    e.preventDefault();
 
-            const response = await api.post(
-                "/tweet/createTweet",
-                {
-                    content: tweetContent,
-                }
-            );
+    if (!tweetContent.trim()) {
+      return;
+    }
 
-            console.log(response.data);
+    try {
+      setError("");
 
-            // Add newly created tweet to the top
-            setTweets((prev) => [
-                response.data.data,
-                ...prev,
-            ]);
+      const response = await api.post("/tweet/createTweet", {
+        content: tweetContent,
+      });
 
-            // Clear input
-            setTweetContent("");
+      console.log(response.data);
 
-        } catch (error) {
-            setError(
-                error.response?.data?.message ||
-                "Failed to create tweet"
-            );
-        }
-    };
+      // Add newly created tweet to the top
+      setTweets((prev) => [response.data.data, ...prev]);
 
-    useEffect(() => {
-        getAllTweets();
-    }, []);
+      // Clear input
+      setTweetContent("");
+    } catch (error) {
+      setError(error.response?.data?.message || "Failed to create tweet");
+    }
+  };
 
-    return (
-        <div className="min-h-screen bg-black px-4 py-8 text-white">
-            <div className="mx-auto max-w-2xl">
+  useEffect(() => {
+    getAllTweets();
+  }, []);
 
-                {/* Header */}
-                <h1 className="mb-6 text-3xl font-bold gap-10">
-                    Tweets
-                   
-                </h1>
-                
-                <Link
-                  to="/Mytweets"
-                  className="text-sm text-zinc-300 transition hover:text-white"
-                >
-                  My Tweets
-                 </Link>
+  return (
+    <div className="min-h-screen bg-black px-4 py-8 text-white">
+      <div className="mx-auto max-w-2xl">
+        {/* Header */}
+        <h1 className="mb-6 text-3xl font-bold gap-10">Tweets</h1>
 
-                {/* Create Tweet */}
-                <form
-                    onSubmit={submitTweet}
-                    className="mb-8 flex gap-3"
-                >
-                    <Input
-                        type="text"
-                        value={tweetContent}
-                        onChange={(e) =>
-                            setTweetContent(e.target.value)
-                        }
-                        placeholder="Tweet Here..."
-                        className="h-11 bg-zinc-900 text-white"
-                    />
+        <Link
+          to="/Mytweets"
+          className="text-sm text-zinc-300 transition hover:text-white"
+        >
+          My Tweets
+        </Link>
 
-                    <Button
-                        type="submit"
-                        className="h-11 shrink-0 bg-white text-black hover:bg-zinc-200"
+        {/* Create Tweet */}
+        <form onSubmit={submitTweet} className="mb-8 flex gap-3">
+          <Input
+            type="text"
+            value={tweetContent}
+            onChange={(e) => setTweetContent(e.target.value)}
+            placeholder="Tweet Here..."
+            className="h-11 bg-zinc-900 text-white"
+          />
+
+          <Button
+            type="submit"
+            className="h-11 shrink-0 bg-white text-black hover:bg-zinc-200"
+          >
+            <Send className="h-4 w-4" />
+            Tweet
+          </Button>
+        </form>
+
+        {/* Error */}
+        {error && <p className="mb-4 text-sm text-red-400">{error}</p>}
+
+        {/* Loading */}
+        {loading && <p className="text-zinc-500">Loading...</p>}
+
+        {/* Tweets */}
+        <div className="space-y-4">
+          {tweets.map((tweet) => (
+            <div
+              key={tweet._id}
+              className="rounded-xl border border-white/10 bg-zinc-950 p-4"
+            >
+              <div className="flex gap-3">
+                {/* Avatar */}
+                <img
+                  src={tweet.owner?.avatar}
+                  alt={tweet.owner?.username}
+                  className="h-10 w-10 rounded-full object-cover"
+                />
+
+                <div>
+                  <p className="font-semibold">{tweet.owner?.fullName}</p>
+
+                  <p className="text-sm text-zinc-500">
+                    @{tweet.owner?.username}
+                  </p>
+
+                  <p className="mt-2 text-zinc-200">{tweet.content}</p>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => {
+                        tweetLike(tweet);
+                      }}
+                      className={`flex items-center gap-2 rounded-lg px-3 py-2 text-gray-400 hover:bg-white/10 hover:text-white ${likedTweet == tweet._id ? "fill-current text-red-500" : ""}`}
                     >
-                        <Send className="h-4 w-4" />
-                        Tweet
-                    </Button>
-                </form>
+                      <ThumbsUp size={18} />
+                    </button>
 
-                {/* Error */}
-                {error && (
-                    <p className="mb-4 text-sm text-red-400">
-                        {error}
-                    </p>
-                )}
-
-                {/* Loading */}
-                {loading && (
-                    <p className="text-zinc-500">
-                        Loading...
-                    </p>
-                )}
-
-                {/* Tweets */}
-                <div className="space-y-4">
-                    {tweets.map((tweet) => (
-                        <div
-                            key={tweet._id}
-                            className="rounded-xl border border-white/10 bg-zinc-950 p-4"
-                        >
-                            <div className="flex gap-3">
-
-                                {/* Avatar */}
-                                <img
-                                    src={tweet.owner?.avatar}
-                                    alt={tweet.owner?.username}
-                                    className="h-10 w-10 rounded-full object-cover"
-                                />
-
-                                <div>
-                                    <p className="font-semibold">
-                                        {tweet.owner?.fullName}
-                                    </p>
-
-                                    <p className="text-sm text-zinc-500">
-                                        @{tweet.owner?.username}
-                                    </p>
-
-                                    <p className="mt-2 text-zinc-200">
-                                        {tweet.content}
-                                    </p>
-                                </div>
-
-                            </div>
-                        </div>
-                    ))}
+                    <button
+                      onClick={() => {
+                        tweetLike(tweet);
+                        setDislikedTweet(
+                          dislikedTweet === tweet._id ? null : tweet._id,
+                        );
+                      }}
+                      className={`flex items-center gap-2 rounded-lg px-3 py-2 text-gray-400 hover:bg-white/10 hover:text-white  ${dislikedTweet == tweet._id ? "fill-current text-red-500" : ""}`}
+                    >
+                      <ThumbsDown size={18} />
+                    </button>
+                  </div>
                 </div>
-
+              </div>
             </div>
+          ))}
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default Tweets;
