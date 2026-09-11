@@ -107,7 +107,7 @@ const Tweets = () => {
           to="/Mytweets"
           className="text-sm text-zinc-300 transition hover:text-white"
         >
-          My Tweets
+        Go to My Tweets
         </Link>
 
         {/* Create Tweet */}
