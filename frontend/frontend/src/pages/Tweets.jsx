@@ -12,27 +12,38 @@ const Tweets = () => {
   const [tweetContent, setTweetContent] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [likedTweet, setLikedTweet] = useState(null);
-  
+  const [likedTweets, setLikedTweets] = useState([]);
 
   const { authUser } = useAuthContext();
+
+  const likeTweet = async () => {
+    try {
+      const res = await api.get("/like/getLikedTweet");
+      console.log(res.data);
+
+      const likedIds = res.data.data.map((like) => like.tweet);
+
+      setLikedTweets(likedIds);
+    } catch (error) {
+      console.log(error?.res?.data.message || error.message);
+    }
+  };
 
   const tweetLike = async (tweet) => {
     try {
       const response = await api.post(`/like/toggleTweetLike/${tweet._id}`);
+
       console.log(response.data);
 
-      if (likedTweet == tweet._id) {
-        setLikedTweet(null);
+      if (likedTweets.includes(tweet._id)) {
+        setLikedTweets((prev) => prev.filter((item) => item !== tweet._id));
       } else {
-        setLikedTweet(tweet._id);
-    
+        setLikedTweets((prev) => [...prev, tweet._id]);
       }
     } catch (error) {
-      console.log("error is", error.response?.data.message || error.message);
+      console.log("error is", error.response?.data?.message || error.message);
     }
   };
-
   // Get all tweets
   const getAllTweets = async () => {
     try {
@@ -73,10 +84,8 @@ const Tweets = () => {
 
       console.log(response.data);
 
-      // Add newly created tweet to the top
       setTweets((prev) => [response.data.data, ...prev]);
 
-      // Clear input
       setTweetContent("");
     } catch (error) {
       setError(error.response?.data?.message || "Failed to create tweet");
@@ -85,6 +94,7 @@ const Tweets = () => {
 
   useEffect(() => {
     getAllTweets();
+    likeTweet();
   }, []);
 
   return (
@@ -153,7 +163,7 @@ const Tweets = () => {
                       onClick={() => {
                         tweetLike(tweet);
                       }}
-                      className={`flex items-center gap-2 rounded-lg px-3 py-2 text-gray-400 hover:bg-white/10 hover:text-white ${likedTweet == tweet._id ? "fill-current text-red-500" : ""}`}
+                      className={`flex items-center gap-2 rounded-lg px-3 py-2 text-gray-400 hover:bg-white/10 hover:text-white ${likedTweets.includes(tweet._id) ? "fill-current text-red-500" : ""}`}
                     >
                       <ThumbsUp size={18} />
                     </button>

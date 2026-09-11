@@ -159,4 +159,13 @@ const getLikedVideos = asyncHandler(async (req, res) => {
     );
 });
 
-export { toggleCommentLike, toggleTweetLike, toggleVideoLike, getLikedVideos,};
+const getLikedTweet=async(req,res)=>{
+    const likedTweet=await Like.find({
+      likedBy:req.user._id,
+      tweet:{$ne:null}
+    }).select("tweet")
+
+    return res.status(200).json(new ApiResponse(200,likedTweet,"liked tweets"))
+}
+
+export { toggleCommentLike, toggleTweetLike, toggleVideoLike, getLikedVideos,getLikedTweet};
