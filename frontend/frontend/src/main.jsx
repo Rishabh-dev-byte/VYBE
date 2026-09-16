@@ -10,6 +10,7 @@ import Profile from "./components/ui/Profile";
 import Tweets from "./pages/Tweets";
 import MyTweet from "./pages/MyTweet";
 import AuthLayout from "./components/ui/AuthLayout";
+import LikedTweets from "./pages/LikedTweets";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,14 @@ const router = createBrowserRouter([
         <MyTweet />
       </AuthLayout>
     ),
+  },
+   {
+    path: "/likedTweets",
+    element: 
+     
+        <LikedTweets/>
+      
+    
   },
 ]);
 

@@ -2,12 +2,14 @@ import { Link } from "react-router-dom";
 import { Search, User } from "lucide-react";
 import logo from "../../assets/logo.svg";
 import { useAuthContext } from "@/context/AuthContext";
+import api from "@/lib/axios";
 
 const Header = () => {
-  const { authUser } = useAuthContext();
+  const { authUser, setAuthUser } = useAuthContext();
   const Logout = async () => {
     try {
-      const response = await api("/users/logout");
+      const response = await api.post("/users/logout");
+      setAuthUser(null)
     } catch (error) {
       console.log(error);
     }
@@ -79,7 +81,7 @@ const Header = () => {
         ) : (
           <div className="flex items-center gap-2">
             <button
-              onClick={Logout}
+              onClick={() => Logout()}
               className="rounded-lg px-4 py-2 text-sm font-medium text-gray-300 transition hover:bg-white/10 hover:text-white"
             >
               Logout

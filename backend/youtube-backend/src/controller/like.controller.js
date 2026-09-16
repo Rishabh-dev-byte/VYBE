@@ -16,7 +16,7 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
     likedBy: req.user._id,
   });
 
-  // If already liked → unlike
+  
   if (existingLike) {
     await Like.findByIdAndDelete(existingLike._id);
 
@@ -52,7 +52,7 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
     likedBy: req.user._id,
   });
 
-  // If already liked → unlike
+  
   if (existingLike) {
     await Like.findByIdAndDelete(existingLike._id);
 
@@ -88,7 +88,7 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
     likedBy: req.user._id,
   });
 
-  // If already liked → unlike
+  
   if (existingLike) {
     await Like.findByIdAndDelete(existingLike._id);
 
@@ -163,9 +163,19 @@ const getLikedTweet=async(req,res)=>{
     const likedTweet=await Like.find({
       likedBy:req.user._id,
       tweet:{$ne:null}
-    }).select("tweet")
+    })
+    .populate({
+      path:"tweet",
+      populate:{
+        path:"owner",
+        select: "fullName username avatar"
+      }
+    })
+    .select("tweet likedBy")
 
     return res.status(200).json(new ApiResponse(200,likedTweet,"liked tweets"))
 }
+
+
 
 export { toggleCommentLike, toggleTweetLike, toggleVideoLike, getLikedVideos,getLikedTweet};

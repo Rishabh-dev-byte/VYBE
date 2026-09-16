@@ -6,9 +6,11 @@ import logo from "../../assets/logo.svg";
 import { Input } from "./input";
 import { Button } from "./button";
 import api from "@/lib/axios";
+import { useAuthContext } from "@/context/AuthContext";
 
 const Signup = () => {
     const navigate = useNavigate();
+    const{authUser, setAuthUser} = useAuthContext()
 
     const {
         register,
@@ -49,6 +51,7 @@ const Signup = () => {
             console.log(response.data);
 
             if (response.data.success) {
+                setAuthUser(response.data.data);
                 navigate("/login");
             }
 

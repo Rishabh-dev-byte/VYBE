@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import { useAuthContext } from "@/context/AuthContext";
 
 import logo from "../../assets/logo.svg";
 import { Input } from "./input";
@@ -10,6 +11,7 @@ import api from "@/lib/axios";
 
 const Login = () => {
     const navigate = useNavigate();
+    const{authUser, setAuthUser} = useAuthContext()
 
     const {
         register,
@@ -31,6 +33,7 @@ const Login = () => {
             console.log(response.data);
 
             if (response.data.success) {
+                setAuthUser(response.data.data);
                 navigate("/");
             }
         } catch (error) {

@@ -100,7 +100,7 @@ const MyTweet = () => {
 
     return (
         <div className="min-h-screen bg-black px-4 py-10 text-white">
-            <div className="mx-auto max-w-2xl">
+            <div className="mx-auto max-w-xl">
 
                 {/* Heading */}
                 <div className="mb-8">
@@ -141,7 +141,7 @@ const MyTweet = () => {
                     {tweets.map((tweet) => (
                         <div
                             key={tweet._id}
-                            className="rounded-2xl border border-white/10 bg-zinc-950 p-5 transition hover:border-white/20"
+                            className="rounded-2xl border border-white/10 bg-zinc-950 p-4 transition hover:border-white/20"
                         >
 
                             {/* Tweet Content */}
@@ -156,7 +156,7 @@ const MyTweet = () => {
                                         e.target.value
                                     )
                                 }
-                                className={`min-h-24 w-full resize-none rounded-xl border p-4 text-sm outline-none transition ${
+                                className={`min-h-16 w-full resize-none rounded-xl border p-4 text-sm outline-none transition ${
                                     editingId === tweet._id
                                         ? "border-white/20 bg-zinc-900 text-white"
                                         : "border-transparent bg-transparent text-zinc-300"

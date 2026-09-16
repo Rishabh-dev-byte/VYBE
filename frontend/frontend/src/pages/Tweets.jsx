@@ -21,7 +21,7 @@ const Tweets = () => {
       const res = await api.get("/like/getLikedTweet");
       console.log(res.data);
 
-      const likedIds = res.data.data.map((like) => like.tweet);
+      const likedIds = res.data.data.map((like) => like.tweet._id);
 
       setLikedTweets(likedIds);
     } catch (error) {
@@ -44,7 +44,7 @@ const Tweets = () => {
       console.log("error is", error.response?.data?.message || error.message);
     }
   };
-  // Get all tweets
+  
   const getAllTweets = async () => {
     try {
       setLoading(true);
@@ -99,8 +99,8 @@ const Tweets = () => {
 
   return (
     <div className="min-h-screen bg-black px-4 py-8 text-white">
-      <div className="mx-auto max-w-2xl">
-        {/* Header */}
+      <div className="mx-auto max-w-xl">
+        
         <h1 className="mb-6 text-3xl font-bold gap-10">Tweets</h1>
 
         <Link
@@ -110,7 +110,7 @@ const Tweets = () => {
         Go to My Tweets
         </Link>
 
-        {/* Create Tweet */}
+        
         <form onSubmit={submitTweet} className="mb-8 flex gap-3">
           <Input
             type="text"
@@ -129,21 +129,21 @@ const Tweets = () => {
           </Button>
         </form>
 
-        {/* Error */}
+        
         {error && <p className="mb-4 text-sm text-red-400">{error}</p>}
 
-        {/* Loading */}
+        
         {loading && <p className="text-zinc-500">Loading...</p>}
 
-        {/* Tweets */}
+        
         <div className="space-y-4">
           {tweets.map((tweet) => (
             <div
               key={tweet._id}
-              className="rounded-xl border border-white/10 bg-zinc-950 p-4"
+              className="max-w-xl rounded-xl border border-white/10 bg-zinc-950 p-4"
             >
               <div className="flex gap-3">
-                {/* Avatar */}
+                
                 <img
                   src={tweet.owner?.avatar}
                   alt={tweet.owner?.username}
