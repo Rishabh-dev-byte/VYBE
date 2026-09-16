@@ -59,11 +59,11 @@ const router = createBrowserRouter([
   },
    {
     path: "/likedTweets",
-    element: 
-     
+    element: (
+      <AuthLayout>
         <LikedTweets/>
-      
-    
+      </AuthLayout>
+    ),
   },
 ]);
 
