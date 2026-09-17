@@ -273,18 +273,22 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 });
 
 const updateUserAvatar = asyncHandler(async (req, res) => {
-  const avatarLocalPath = req.file?.avatar;
+  const avatarLocalPath = req.file?.path;
 
+  if (!avatarLocalPath) {
+    throw new ApiError(400, "Avatar file is required");
+  }
   const avatar = await uploadOnCloudinary(avatarLocalPath);
-  if (!avatar.url) {
+
+  if (!avatar?.url) {
     throw new ApiError(400, "Error while uploading on avatar");
   }
 
-  const user = User.findByIdAndUpdate(
+  const user = await User.findByIdAndUpdate(
     req.user._id,
     {
       $set: {
-        avatar: avatar?.url,
+        avatar: avatar.url,
       },
     },
     { new: true },
@@ -296,18 +300,18 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
 });
 
 const updateUserCoverImage = asyncHandler(async (req, res) => {
-  const coverImageLocalPath = req.file?.coverImage;
+  const coverImageLocalPath = req.file?.path;
 
   const coverImage = await uploadOnCloudinary(coverImageLocalPath);
-  if (!coverImage.url) {
+  if (!coverImage?.url) {
     throw new ApiError(400, "Error while uploading on coverImage");
   }
 
-  const user = User.findByIdAndUpdate(
+  const user = await User.findByIdAndUpdate(
     req.user._id,
     {
       $set: {
-        coverImage: coverImage?.url,
+        coverImage: coverImage.url,
       },
     },
     { new: true },
