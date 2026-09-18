@@ -68,11 +68,11 @@ const router = createBrowserRouter([
   },
     {
     path: "/uploadvideo",
-    element: 
-      
+    element: (
+      <AuthLayout>
         <UploadVideo/>
-      
-    
+      </AuthLayout>
+    ),
   },
 ]);
 

@@ -9,14 +9,14 @@ const Header = () => {
   const Logout = async () => {
     try {
       const response = await api.post("/users/logout");
-      setAuthUser(null)
+      setAuthUser(null);
     } catch (error) {
       console.log(error);
     }
   };
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0a0a0a]/95 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-3 sm:px-6">
         {/* Logo */}
         <Link to="/" className="flex items-center">
           <img src={logo} alt="VYBE" className="h-12 w-auto object-contain" />
@@ -63,23 +63,30 @@ const Header = () => {
 
         {/* Authentication */}
         {!authUser ? (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             <Link
               to="/login"
-              className="rounded-lg px-4 py-2 text-sm font-medium text-gray-300 transition hover:bg-white/10 hover:text-white"
+              className="rounded-lg px-2 py-2 text-xs font-medium text-gray-300 transition hover:bg-white/10 hover:text-white sm:px-4 sm:text-sm"
             >
               Login
             </Link>
 
             <Link
               to="/signup"
-              className="rounded-lg bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-purple-500/20 transition hover:scale-105 hover:shadow-purple-500/40"
+              className="rounded-lg bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 px-3 py-2 text-xs font-semibold text-white shadow-lg shadow-purple-500/20 transition hover:scale-105 sm:px-4 sm:text-sm"
             >
               Sign Up
             </Link>
           </div>
         ) : (
           <div className="flex items-center gap-2">
+            <Link
+              to="/uploadvideo"
+              className="rounded-lg bg-white px-2.5 py-1.5 text-xs font-semibold text-black transition hover:bg-zinc-200 sm:px-4 sm:py-2 sm:text-sm"
+            >
+              + Upload
+            </Link>
+
             <button
               onClick={() => Logout()}
               className="rounded-lg px-4 py-2 text-sm font-medium text-gray-300 transition hover:bg-white/10 hover:text-white"
