@@ -7,10 +7,11 @@ import { Button } from "./button";
 
 const Profile = () => {
     const { authUser } = useAuthContext();
+    
 
     const [error, setError] = useState("");
 
-    // Details form
+    
     const detailsForm = useForm({
         defaultValues: {
             fullName: "",
@@ -56,7 +57,7 @@ const Profile = () => {
         }
     };
 
-    // Update avatar
+    
     const updateAvatar = async (data) => {
         setError("");
 
@@ -172,6 +173,7 @@ const Profile = () => {
                                 <Input
                                     type="text"
                                     placeholder="Enter your full name"
+    
                                     className="h-11 bg-white/5 text-white placeholder:text-zinc-500"
                                     {...detailsForm.register("fullName", {
                                         required: "Full name is required",

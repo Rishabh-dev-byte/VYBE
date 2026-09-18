@@ -11,6 +11,7 @@ import Tweets from "./pages/Tweets";
 import MyTweet from "./pages/MyTweet";
 import AuthLayout from "./components/ui/AuthLayout";
 import LikedTweets from "./pages/LikedTweets";
+import UploadVideo from "./pages/UploadVideo";
 
 const router = createBrowserRouter([
   {
@@ -64,6 +65,14 @@ const router = createBrowserRouter([
         <LikedTweets/>
       </AuthLayout>
     ),
+  },
+    {
+    path: "/uploadvideo",
+    element: 
+      
+        <UploadVideo/>
+      
+    
   },
 ]);
 
